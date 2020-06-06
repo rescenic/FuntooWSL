@@ -35,14 +35,14 @@ Install x86_64 version of MSYS2(https://www.msys2.org).
 Run these commands in msys shell
 ```bash
 $ pacman -S mingw-w64-x86_64-toolchain # install tool chain
-$ gcc -std=c99 --static -lshlwapi main.c -o Launcher.exe # compile main.c
+$ gcc -std=c99 --static main.c -o Launcher.exe -lshlwapi# compile main.c
 ```
 
 Optionally, to add an icon to the exe, create and link a resource with
 ```bash
 YourDistroName=Fedora
 $ windres res/$YourDistroName/res.rc res.o # compile resource
-$ gcc -std=c99 --static -lshlwapi main.c -o ${YourDistroName}.exe res.o # compile main.c
+$ gcc -std=c99 --static main.c -o ${YourDistroName}.exe res.o -lshlwapi # compile main.c
 ```
 
 ### Linux (cross compile)

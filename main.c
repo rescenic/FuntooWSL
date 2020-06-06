@@ -512,7 +512,7 @@ HRESULT RemoveDist(wchar_t *TargetName)
     wprintf(L"This will remove this distro (%s) from the filesystem.\n",TargetName);
     wprintf(L"Are you sure you would like to proceed? (This cannot be undone)\n");
     wprintf(L"Type \"y\" to continue:");
-    scanf_s("%c",&yn,1);
+    sscanf_s("%c",&yn,1);
     if(yn == 'y')
     {
         wprintf(L"Unregistering...\n");
@@ -533,7 +533,7 @@ int ResettingDir(wchar_t *uuid,wchar_t *dirPath)
     wprintf(L"Rootfs data found in executable directory.\n");
     wprintf(L"If you moved the executable directory, you can resetting the path.\n");
     wprintf(L"Do you want to resetting path?(y/n):");
-    scanf_s("%c",&yn,1);
+    sscanf_s("%c",&yn,1);
     if(yn == 'y')
     {
         WslSetInstallationPathInfo(uuid,dirPath);

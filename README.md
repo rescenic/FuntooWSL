@@ -1,32 +1,41 @@
 # Funtoo WSL
-Funtoo WSL for Windows 10 WSL 1/WSL 2
 
+Funtoo WSL for Windows 10 WSL 1/WSL 2
 
 ![wsltty](docs/main.png)
 
 ## 💻Requirements
-* Windows 10 1709 Fall Creators Update 64bit or later.
-* Windows Subsystem for Linux feature is enabled.
+
+-   Windows 10 1709 Fall Creators Update 64bit or later.
+-   Windows Subsystem for Linux feature is enabled.
 
 **Note:**
 Exe filename is using to the instance name to register.
 If you rename it, you can register with a different name.
 
-
 ## 🔧Install with any Funtoo rootfs
+
 #### 1. [Download Funtoo.exe](https://github.com/rescenic/FuntooWSL/releases)
+
 #### 2. [Download Funtoo rootfs (tar.xz file) based on your computer processors (Subarches)](https://www.funtoo.org/Subarches)
+
 (Ex: My CPU is Intel64 Sandybridge, So I choose: https://www.funtoo.org/Intel64-sandybridge then I choose stage3 file (tar.xz file)
 https://build.funtoo.org/1.4-release-std/x86-64bit/intel64-sandybridge/2020-04-10/stage3-intel64-sandybridge-1.4-release-std-2020-04-10.tar.xz)
-#### 3. Rename stage3-*.tar.xz & convert it to rootfs.tar.gz using 7-Zip. 
+
+#### 3. Rename stage3-\*.tar.xz & convert it to rootfs.tar.gz using 7-Zip.
+
 #### 4. Put your rootfs.tar.gz in same directory as Funtoo.exe (Installation directory)
+
 #### 5. Run exe to install. This process may take a few minutes.
+
 ![installing-funto](docs/installing-funtoo.png)
 
 Note: You can distribute your distribution including wsldl exe.
 
 ## 📝How-to-Use(for Installed Instance)
+
 #### exe Usage
+
 ```
 Usage :
     <no args>
@@ -65,9 +74,37 @@ Usage :
 ```
 
 #### First setup
+
 ```
+# Fix network issues
+# Delete auto-generated files
+[root@PC-NAME user]# rm /etc/resolv.conf || true
+[root@PC-NAME user]# rm /etc/wsl.conf || true
+
+# Enable changing /etc/resolv.conf
+# Enable extended attributes on Windows drives
+[root@PC-NAME user]# cat <<EOF > /etc/wsl.conf
+[network]
+generateResolvConf = false
+
+[automount]
+enabled = true
+options = "metadata"
+mountFsTab = false
+EOF
+
+# Use google nameservers for DNS resolution
+[root@PC-NAME user]# cat <<EOF > /etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+
 [root@PC-NAME user]# epro show
 [root@PC-NAME user]# ego sync
+[root@PC-NAME user]# echo '=dev-lang/python-3.7*' >> /etc/portage/package.unmask
+[root@PC-NAME user]# emerge '=dev-lang/python-3.7*'
+[root@PC-NAME user]# echo '=dev-lang/python-2.7*' >> /etc/portage/package.unmask
+[root@PC-NAME user]# emerge '=dev-lang/python-2.7*'
 [root@PC-NAME user]# nano /etc/portage/make.conf
 -----------------------------------------------------------------------------
 # No GUI (-X -gtk), only english error messages (-nls)
@@ -94,10 +131,6 @@ EMERGE_DEFAULT_OPTS="--ask --complete-graph"
 # Please keep this setting intact when reporting bugs.
 LC_MESSAGES=C
 -----------------------------------------------------------------------------
-[root@PC-NAME user]# echo '=dev-lang/python-3.7*' >> /etc/portage/package.unmask
-[root@PC-NAME user]# emerge '=dev-lang/python-3.7*'
-[root@PC-NAME user]# echo '=dev-lang/python-2.7*' >> /etc/portage/package.unmask
-[root@PC-NAME user]# emerge '=dev-lang/python-2.7*'
 [root@PC-NAME user]# emerge vim
 [root@PC-NAME user]# emerge app-arch/zstd
 [root@PC-NAME user]# emerge app-misc/tmux
@@ -122,24 +155,28 @@ p10k configure automatically appears, set shell appearance as you want.
 ```
 
 #### Just Run exe
+
 ```cmd
 >{InstanceName}.exe
 [root@PC-NAME user]#
 ```
 
 #### Run with command line
+
 ```cmd
 >{InstanceName}.exe run uname -r
 4.4.0-43-Microsoft
 ```
 
 #### Run with command line with path translation
+
 ```cmd
 >{InstanceName}.exe runp echo C:\Windows\System32\cmd.exe
 /mnt/c/Windows/System32/cmd.exe
 ```
 
 #### Change Default User(id command required)
+
 ```cmd
 >{InstanceName}.exe config --default-user user
 
@@ -148,20 +185,24 @@ p10k configure automatically appears, set shell appearance as you want.
 ```
 
 #### Set "Windows Terminal" as default terminal
+
 ```cmd
 >{InstanceName}.exe config --default-term wt
 ```
 
 #### How to uninstall instance
+
 ```cmd
 >{InstanceName}.exe clean -y
 
 ```
 
 ## 🛠How-to-Build
+
 Please see [DEVELOPERS.md](https://github.com/rescenic/FuntooWSL/blob/master/DEVELOPERS.md)
 
 ## 📄License
+
 [MIT](https://github.com/yuk7/rescenic/FuntooWSL/master/LICENSES.md)
 
 Copyright (c) 2017-2020 yuk7 <br/>

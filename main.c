@@ -25,6 +25,7 @@
 unsigned long QueryUser(wchar_t *TargetName,wchar_t *username);
 int QueryWslPath(wchar_t *TargetName, wchar_t *path, wchar_t *out);
 bool dirExists(const wchar_t* dirName);
+bool fileExists(const wchar_t* fileName);
 int InstallDist(wchar_t *TargetName,wchar_t *tgzname);
 HRESULT RemoveDist(wchar_t *TargetName);
 int ResettingDir(wchar_t *uuid,wchar_t *dirPath);
@@ -57,9 +58,6 @@ int main()
 
     PathAppendW(efFullDir,efDir);
     PathRemoveBackslashW(efFullDir);
-
-
-    WslApiInit();
 
     if(WARGV_CMP(1,L"isregd"))
     {
@@ -120,7 +118,16 @@ int main()
                 if(dirExists(efFullDirRootfs))
                 {
                     ResettingDir(wslInstallation.uuid,efFullDir);
+                    hr = S_OK;
+                }
 
+                wchar_t efFullDirVhdx[MAX_PATH];
+                wcscpy_s(efFullDirVhdx,MAX_PATH,efFullDir);
+                PathAppendW(efFullDirVhdx,L"ext4.vhdx");
+                
+                if(fileExists(efFullDirVhdx))
+                {
+                    ResettingDir(wslInstallation.uuid,efFullDir);
                     hr = S_OK;
                 }
             }
@@ -131,7 +138,15 @@ int main()
                     bool iscmdline = isParentCmdLine();
                     if ((wslInstallation.termInfo == 1) && (!iscmdline)) //Windows Terminal
                     {
-                        wchar_t Ecmd[200] = L"wt.exe -p \"";
+                        wchar_t Epath[MAX_PATH];
+                        size_t Epath_sz = 0;
+                        _wgetenv_s(&Epath_sz, Epath, MAX_PATH, L"LOCALAPPDATA");
+                        PathAppendW(Epath, L"Microsoft\\WindowsApps\\wt.exe");
+
+                        wchar_t Ecmd[MAX_PATH + 200];
+                        wcscpy_s(Ecmd, MAX_PATH + 200, Epath);
+
+                        wcscat_s(Ecmd, ARRAY_LENGTH(Ecmd), L" -p \"");
                         wcscat_s(Ecmd, ARRAY_LENGTH(Ecmd), wslInstallation.distroName);
                         wcscat_s(Ecmd, ARRAY_LENGTH(Ecmd), L"\" -d .");
 
@@ -142,7 +157,15 @@ int main()
                     }
                     else if ((wslInstallation.termInfo == 2) && (!iscmdline)) //Fluent Terminal
                     {
-                        wchar_t Ecmd[200] = L"flute.exe run \"";
+                        wchar_t Epath[MAX_PATH];
+                        size_t Epath_sz = 0;
+                        _wgetenv_s(&Epath_sz, Epath, MAX_PATH, L"LOCALAPPDATA");
+                        PathAppendW(Epath, L"Microsoft\\WindowsApps\\flute.exe");
+
+                        wchar_t Ecmd[MAX_PATH *2 + 20];
+                        wcscpy_s(Ecmd, MAX_PATH *2 + 20, Epath);
+
+                        wcscat_s(Ecmd, ARRAY_LENGTH(Ecmd), L" run \"");
                         wcscat_s(Ecmd, ARRAY_LENGTH(Ecmd), efpath);
                         wcscat_s(Ecmd, ARRAY_LENGTH(Ecmd), L" run\"");
 
@@ -442,6 +465,12 @@ bool dirExists(const wchar_t* dirName)
 {
     DWORD ftyp = GetFileAttributesW(dirName);
     return (ftyp != INVALID_FILE_ATTRIBUTES) && (ftyp & FILE_ATTRIBUTE_DIRECTORY);
+}
+
+bool fileExists(const wchar_t* fileName)
+{
+    DWORD ftyp = GetFileAttributesW(fileName);
+    return (ftyp != INVALID_FILE_ATTRIBUTES) && !(ftyp & FILE_ATTRIBUTE_DIRECTORY);
 }
 
 unsigned long QueryUser(wchar_t *TargetName,wchar_t *username)

@@ -2,7 +2,9 @@
 
 Funtoo WSL for Windows 10 WSL 1/WSL 2
 
-![wsltty](docs/main.png)
+![kernel4.4](docs/main.png)
+![kernel5.4](docs/main2.png)
+![wsl](docs/main3.png)
 
 ## 💻Requirements
 
@@ -150,10 +152,12 @@ LC_MESSAGES=C
 [root@PC-NAME user]# epro build current
 [root@PC-NAME user]# ego sync
 [root@PC-NAME user]# emerge -auDN @world
+[root@PC-NAME user]# emerge --depclean
 -----------------------------------------------------------------------------
 [root@PC-NAME user]# emerge vim
 [root@PC-NAME user]# emerge app-arch/zstd
 [root@PC-NAME user]# emerge app-misc/tmux
+[root@PC-NAME user]# emerge sys-process/htop
 [root@PC-NAME user]# emerge app-shells/zsh
 [root@PC-NAME user]# emerge --ask dev-vcs/git
 [root@PC-NAME user]# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -191,7 +195,7 @@ emerge app-misc/neofetch or emerge '=app-misc/neofetch-9999'
 cat /etc/*release
 cat /proc/version
 nano /etc/*release
-Add Funtoo in Pretty Name.
+Add Funtoo Linux in Pretty Name.
 -----------------------------------------------------------------------------
 ```
 

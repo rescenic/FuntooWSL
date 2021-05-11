@@ -20,7 +20,7 @@ If you rename it, you can register with a different name.
 #### 2. [Download Funtoo rootfs (tar.xz file) based on your computer processors (Subarches)](https://www.funtoo.org/Subarches)
 
 (Ex: My CPU is Intel64 Sandybridge, So I choose: https://www.funtoo.org/Intel64-sandybridge then I choose stage3 file (tar.xz file)
-https://build.funtoo.org/1.4-release-std/x86-64bit/intel64-sandybridge/2020-04-10/stage3-intel64-sandybridge-1.4-release-std-2020-04-10.tar.xz)
+https://build.funtoo.org/1.4-release-std/x86-64bit/intel64-sandybridge/2021-05-05/stage3-intel64-sandybridge-1.4-release-std-2021-05-05.tar.xz)
 
 #### 3. Rename stage3-\*.tar.xz & convert it to rootfs.tar.gz using 7-Zip.
 
@@ -127,9 +127,29 @@ FEATURES="-ipc-sandbox -pid-sandbox -mount-sandbox -network-sandbox"
 # Always ask when managing packages, always consider deep dependencies (slow)
 EMERGE_DEFAULT_OPTS="--ask --complete-graph"
 
+# Enable optimizations for the used CPU
+COMMON_FLAGS="-march=sandybridge -O2 -pipe"
+CHOST="x86_64-pc-linux-gnu"
+CFLAGS="${COMMON_FLAGS}"
+CXXFLAGS="${COMMON_FLAGS}"
+FCFLAGS="${COMMON_FLAGS}"
+FFLAGS="${COMMON_FLAGS}"
+MAKEOPTS="-j5"
+
+# NOTE: This stage was built with the bindist Use flag enabled
+## PKGDIR="/var/cache/portage/packages"
+## PORTAGE_CONFIGROOT="/"
+## PORTAGE_TMPDIR="/var/tmp"
+## DISTDIR="/var/cache/portage/distfiles"
+## PORTDIR="/usr/portage"
+
 # This sets the language of build output to English.
 # Please keep this setting intact when reporting bugs.
 LC_MESSAGES=C
+-----------------------------------------------------------------------------
+[root@PC-NAME user]# epro build current
+[root@PC-NAME user]# ego sync
+[root@PC-NAME user]# emerge -auDN @world
 -----------------------------------------------------------------------------
 [root@PC-NAME user]# emerge vim
 [root@PC-NAME user]# emerge app-arch/zstd
@@ -143,15 +163,36 @@ LC_MESSAGES=C
 [root@PC-NAME user]# nano ~/.zshrc
 -----------------------------------------------------------------------------
 //edit those lines
+export TERM="xterm-256color"
+export PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+# Path to your oh-my-zsh installation.
+export ZSH="/root/.oh-my-zsh"
+
 POWERLEVEL9K_MODE="nerdfont-complete"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# History in cache file:
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
 //edit-done
 -----------------------------------------------------------------------------
 [root@PC-NAME user]# exit //exit Funtoo.exe
 
 //Reopen Funtoo.exe
 p10k configure automatically appears, set shell appearance as you want.
+
+=============================================================================
+INSTALL & FIX NEOFETCH
+=============================================================================
+emerge app-misc/neofetch or emerge '=app-misc/neofetch-9999'
+-----------------------------------------------------------------------------
+cat /etc/*release
+cat /proc/version
+nano /etc/*release
+Add Funtoo in Pretty Name.
+-----------------------------------------------------------------------------
 ```
 
 #### Just Run exe
@@ -193,7 +234,7 @@ p10k configure automatically appears, set shell appearance as you want.
 #### How to uninstall instance
 
 ```cmd
->{InstanceName}.exe clean -y
+>{InstanceName}.exe clean
 
 ```
 
